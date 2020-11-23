@@ -1,0 +1,18 @@
+<%- include("partials/header") %>
+		
+		<div class = "container">
+			<div class="row mt-2">
+				
+			</div>
+			<% games.forEach((game) => { %>
+				<div class = "card m-3">
+				<a href="/games/<%= game._id %>">
+				<image class = "card-img card-img-top" src="<%= game.image %>" alt = "pic" />
+					</a>
+				<h3 class = "card-title mt-3"><%= game.title%></h3>
+					<p class = "card-text mb-3 mx-3"><%= game.description %></p>
+			</div>
+			<% }) %>
+</div>
+		</div>
+<%- include("partials/footer") %>
