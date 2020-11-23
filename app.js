@@ -13,7 +13,12 @@ const localStrategy = require("passport-local").Strategy;
 const expressSession = require("express-session");
 
 //Config
-const config = require("./config");
+try {
+	var config = require("./config");
+} catch (e) {
+	console.log("could not import config.");
+	console.log(e)
+};
 
 //route
 const gameRoutes = require('./routes/games');
@@ -38,7 +43,13 @@ app.use(morgan("tiny"));
 //Config
 //==========================
 //Connect to DB
-mongoose.connect(config.db.connection, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
+try {
+	mongoose.connect(config.db.connection, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
+} catch (e) {
+	console.log("could not connect to config")
+	mongoose.connect(process.env.DB_CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+};
+
 
 //Express config
 app.set("view engine", "ejs");
@@ -46,7 +57,7 @@ app.use(express.static("public"));
 
 //Express Session Config
 app.use(expressSession({
-	secret: "hrgheg;sohg;hga;grgliuaggerkhjgk",
+	secret: process.env.ES_SECRET || config.expressSession.secret,
 	resave: false,
 	saveUninitialized: false
 }));
@@ -77,6 +88,6 @@ app.use("/", landingRoutes);
 app.use("/", authRoutes);
 
 //listen
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
 	console.log("yelp_games is running...")
 })
