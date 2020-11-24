@@ -64,6 +64,17 @@ router.get("/search", async (req, res) => {
 	}
 });
 
+//Genre
+router.get("/genre/:genre", async (req, res) => {
+	const validGenres = ["fighting", "fps", "board-games", "puzzle", "rpg", "mmo"];
+	if(validGenres.includes(req.params.genre.toLowerCase())) {
+		const games = await Game.find({genre: req.params.genre}).exec();
+		res.render("games", {games});
+	} else {
+		res.send("Please enter a valid genre")
+	}
+});
+
 //show
 router.get("/:id", async (req, res) =>{
 	try {
@@ -73,7 +84,7 @@ router.get("/:id", async (req, res) =>{
 	res.render("games_show", {game, comments})
 	} catch(err) {
 		console.log(err);
-		res.send("broke /comics/id");
+		res.send("broke /games/id");
 	}
 });
 
@@ -97,7 +108,7 @@ router.put("/:id", checkGameOwner, async (req, res) => {
 		image_link: req.body.image_link
 	}
 	try {
-		const comic = await Game.findByIdAndUpdate(req.params.id, gameBody, {new: true}).exec();
+		const game = await Game.findByIdAndUpdate(req.params.id, gameBody, {new: true}).exec();
 	res.redirect(`/games/${req.params.id}`)
 	} catch (err) {
 		console.log(err);
