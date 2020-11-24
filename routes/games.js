@@ -36,11 +36,11 @@ router.post("/", isLoggedIn, async (req, res) => {
 	
 	try {
 		const game = await Game.create(newGame);
-		console.log(game);
+		req.flash("success", "Game created");
 		res.redirect("/games/" + game._id);
 	} catch(err) {
-		console.log(err);
-		res.send("broke");
+		req.flash("error", "Error creating game");
+		res.redirect("/games")
 	}
 });
 
@@ -109,10 +109,12 @@ router.put("/:id", checkGameOwner, async (req, res) => {
 	}
 	try {
 		const game = await Game.findByIdAndUpdate(req.params.id, gameBody, {new: true}).exec();
+		req.flash("success", "Game updated");
 	res.redirect(`/games/${req.params.id}`)
 	} catch (err) {
 		console.log(err);
-		res.send("broke put");
+		req.flash("error", "Error updating");
+		res.redirect("/games");
 	}
 });
 
@@ -120,11 +122,12 @@ router.put("/:id", checkGameOwner, async (req, res) => {
 router.delete("/:id", checkGameOwner, async (req, res) => {
 	try {
 		const deleteGame = await 	Game.findByIdAndDelete(req.params.id).exec();
-		console.log("Deleted", deleteGame);
+		req.flash("success", "Game deleted");
 		res.redirect("/games");
 	} catch (err) {
 		console.log(err);
-		res.send("broke, delete");
+		req.flash("error", "Error deleting game")
+		res.redirect("back");
 	}
 });
 
