@@ -31,7 +31,9 @@ router.post("/", isLoggedIn, async (req, res) => {
 		owner:{
 			id: req.user._id,
 			username: req.user.username
-		}
+		},
+		upvotes: [],
+		downvotes: [],
 	}
 	
 	try {
