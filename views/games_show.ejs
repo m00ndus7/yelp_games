@@ -49,13 +49,21 @@
 	<div class="row">
 		<a href="/games/<%= game._id %>/comments/new" class="col-3"><button class="btn btn-success btn-lg mt-3 mb-4">Add Comment</button></a>
 	<div class="col-2">
-		<% if (user) { %>
+		<% if (user && game.upvotes.indexOf(user.username) >= 0) { %>
+		<button id="upvote_btn" class="btn btn-success btn-lg mt-3">
+			+
+		</button>
+		<% } else if (user) { %>
 		<button id="upvote_btn" class="btn btn-outline-success btn-lg mt-3">
 			+
 		</button>
 		<% } %>
-		<span id="score" class="mx-2">10</span>
-		<% if (user) { %>
+		<span id="score" class="mx-2"><%= game.upvotes.length - game.downvotes.length %></span>
+		<% if (user && game.downvotes.indexOf(user.username) >= 0) { %>
+		<button id="downvote_btn" class="btn btn-danger btn-lg mt-3">
+			-
+		</button>
+		<% } else if (user) { %>
 		<button id="downvote_btn" class="btn btn-outline-danger btn-lg mt-3">
 			-
 		</button>
