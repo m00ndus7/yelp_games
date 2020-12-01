@@ -8,7 +8,7 @@ const bodyParser = require("body-parser");
 const flash = require("connect-flash");
 const mongoose = require('mongoose');
 const methodOverride = require("method-override");
-const morgan = require("morgan");
+//const morgan = require("morgan");
 const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
 const expressSession = require("express-session");
@@ -36,7 +36,7 @@ const User = require("./models/user");
 //Development
 //==========================
 // Morgan
-app.use(morgan("tiny"));
+//app.use(morgan("tiny"));
 
 //const seed = require("./utils/seed");
 //seed();

@@ -1,16 +1,24 @@
 const upvoteBtn = document.getElementById("upvote_btn");
 const downvoteBtn = document.getElementById("downvote_btn");
 
-upvoteBtn.addEventListener("click", async function() {
+const sendVote = async (voteType) => {
 	const options = {
 		method: "POST",
 		headers: {
-			"Content-Type": "application/json"
+			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({vote:"up"})
-	},
+	
+	}
+	if (voteType === "up") {
+		options.body = JSON.stringify({vote: "up"})
+	} else if (voteType === "down") {
+		options.body = JSON.stringify({vote: "down"})
+	} else {
+		throw "voteType must be 'up' or 'down'"
+	}
+	
 		  
-	await fetch("/comics/vote", options)
+	await fetch("/games/vote", options)
 	.then(data => {
 		return data.json()
 	})
@@ -20,4 +28,12 @@ upvoteBtn.addEventListener("click", async function() {
 	.catch(err => {
 		console.log(err)
 	})
+}
+
+upvoteBtn.addEventListener("click", async function() {
+	sendVote("up")
+});
+
+downvoteBtn.addEventListener("click", async function() {
+	sendVote("down")
 });
