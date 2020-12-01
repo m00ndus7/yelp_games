@@ -78,10 +78,13 @@ router.get("/genre/:genre", async (req, res) => {
 });
 
 // Vote
-router.post("/vote", isLoggedIn, (req, res) => {
-	res.json({
-		message: "voted"
-	});
+router.post("/vote", isLoggedIn, async (req, res) => {
+	console.log("Request body:", req.body);
+	
+	const game = await Game.findById(req.body.gameId)
+	console.log(game);
+	
+	res.json(game);
 });
 
 //show
