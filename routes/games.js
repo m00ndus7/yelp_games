@@ -82,9 +82,55 @@ router.post("/vote", isLoggedIn, async (req, res) => {
 	console.log("Request body:", req.body);
 	
 	const game = await Game.findById(req.body.gameId)
-	console.log(game);
+	const alreadyUpvoted = game.upvotes.indexOf(req.user.username)
+	const alreadyDownvoted = game.downvotes.indexOf(req.user.username)
 	
-	res.json(game);
+	let response = {};
+	
+	if(alreadyUpvoted === -1 && alreadyDownvoted === -1) {
+		if (req.body.voteType === "up") {
+			game.upvotes.push(req.user.username);
+			game.save()
+			response.message = "upvote tallied"
+		} else if (req.body.voteType === "down") {
+			game.downvotes.push(req.user.username);
+			game.save()
+			response.message = "downvote tallied"
+		} else {
+			response.message = "Error 1"
+		}
+	} else if (alreadyUpvoted >= 0) {
+		if(req.body.voteType === "up") {
+			game.upvotes.splice(alreadyUpvoted, 1);
+			game.save();
+			response.message = "upvote removed";
+		} else if (req.body.voteType === "down") {
+			game.upvotes.splice(alreadyUpvoted, 1);
+			game.downvotes.push(req.user.username);
+			game.save();
+			response.message = "changed to downvote"
+		} else {
+			response.message = "Error 2"
+		}
+		
+	} else if (alreadyDownvoted >= 0) {
+		if(req.body.voteType === "down") {
+			game.downvotes.splice(alreadyDownvoted, 1);
+			game.save();
+			response.message = "downvote removed"
+		} else if (req.body.voteType === "up") {
+			game.downvotes.splice(alreadyDownvoted, 1);
+			game.downvotes.push(req.user.username);
+			game.save();
+			response.message = "changed to upvote"
+		} else {
+			response.message = "Error 3"
+		}
+	} else {
+		response.message = "Error 4"
+	}
+
+	res.json(response);
 });
 
 //show
